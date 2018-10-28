@@ -1,0 +1,28 @@
+玩转GPS
+
+* 安装软件
+  1. 安装 gpsd （获取位置）
+     #+BEGIN_SRC sh
+     sudo apt-get install gpsd gpsd-clients python-gps
+     #+END_SRC
+  2. 安装 NTP （获取时间）
+     #+BEGIN_SRC sh
+     sudo apt-get install ntp
+     #+END_SRC
+
+     杸mei'pai
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
