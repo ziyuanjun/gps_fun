@@ -10,6 +10,7 @@ ee = 0.00669342162296594323  # 偏心率平方
 
 
 class Geocoding:
+
     def __init__(self, api_key):
         self.api_key = api_key
 
@@ -24,7 +25,8 @@ class Geocoding:
                      'city': '全国',
                      'address': address}
         geocoding = urllib.urlencode(geocoding)
-        ret = urllib.urlopen("%s?%s" % ("http://restapi.amap.com/v3/geocode/geo", geocoding))
+        ret = urllib.urlopen("%s?%s" %
+                             ("http://restapi.amap.com/v3/geocode/geo", geocoding))
 
         if ret.getcode() == 200:
             res = ret.read()
@@ -128,7 +130,7 @@ def wgs84_to_bd09(lon, lat):
 
 def _transformlat(lng, lat):
     ret = -100.0 + 2.0 * lng + 3.0 * lat + 0.2 * lat * lat + \
-          0.1 * lng * lat + 0.2 * math.sqrt(math.fabs(lng))
+        0.1 * lng * lat + 0.2 * math.sqrt(math.fabs(lng))
     ret += (20.0 * math.sin(6.0 * lng * pi) + 20.0 *
             math.sin(2.0 * lng * pi)) * 2.0 / 3.0
     ret += (20.0 * math.sin(lat * pi) + 40.0 *
@@ -140,7 +142,7 @@ def _transformlat(lng, lat):
 
 def _transformlng(lng, lat):
     ret = 300.0 + lng + 2.0 * lat + 0.1 * lng * lng + \
-          0.1 * lng * lat + 0.1 * math.sqrt(math.fabs(lng))
+        0.1 * lng * lat + 0.1 * math.sqrt(math.fabs(lng))
     ret += (20.0 * math.sin(6.0 * lng * pi) + 20.0 *
             math.sin(2.0 * lng * pi)) * 2.0 / 3.0
     ret += (20.0 * math.sin(lng * pi) + 40.0 *
@@ -172,4 +174,4 @@ if __name__ == '__main__':
 
     g = Geocoding('API_KEY')  # 这里填写你的高德api的key
     result7 = g.geocode('北京市朝阳区朝阳公园')
-    print result1, result2, result3, result4, result5, result6, result7
+    print(result1, result2, result3, result4, result5, result6, result7)

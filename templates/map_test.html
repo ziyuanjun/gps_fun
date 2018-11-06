@@ -21,7 +21,7 @@
         <h4>轨迹寻踪</h4>
         <div class="input-item">
             <label>操作：</label>
-            <button class="btn" id="start-record" style="margin-right:1rem;">开始轨迹记录</button>
+            <button class="btn" id="start-record" onclick="startPathRecord()" style="margin-right:1rem;">开始轨迹记录</button>
             <button class="btn" id="end-record">结束记录</button>
             <button class="btn" id="pause-record">暂停记录</button>
         </div>
@@ -45,6 +45,11 @@
          center: {{center}} //初始化地图中心点
      });
 
+     function startPahtRecord(){
+         //调用后端开始GPS记录
+         //后端写一个路由，返回记录的文件名
+         //文件名传参给 loadPath(), 并定时调用该函数
+     }
 
      function addPoint(point){
          var circleMarker = new AMap.CircleMarker({
@@ -73,8 +78,8 @@
                  addPoint(point);
              }
      }
-     function loadPath()
-     {//加载一条测试路径
+     function loadPath(path="/static/test.csv")
+     {//加载一条测试径
          var xmlhttp;
          xmlhttp=new XMLHttpRequest();
          xmlhttp.onreadystatechange=function()
@@ -85,7 +90,7 @@
                      paseLoc(strs);
                  }
          }
-         xmlhttp.open("GET","/static/test.csv",true);
+         xmlhttp.open("GET",path,true);
          xmlhttp.send();
      }
     </script>
