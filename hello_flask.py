@@ -17,6 +17,15 @@ points = [[116.323394571, 40.0550706141],
 center = log_lat
 
 
+@app.route('/ajax')
+def ajax():
+    return render_template('ajax_test.html')
+
+
 @app.route('/map')
 def map():
     return render_template('map_test.html', center=center, points=points)
+
+
+if __name__ == '__main__':
+    app.run(debug=True)

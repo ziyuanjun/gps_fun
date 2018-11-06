@@ -16,33 +16,78 @@
     </style>
 </head>
 <body>
-<div id="container"></div>
+    <div id="container"></div>
+    <div class="input-card" style="width:24rem;">
+        <h4>轨迹寻踪</h4>
+        <div class="input-item">
+            <label>操作：</label>
+            <button class="btn" id="start-record" style="margin-right:1rem;">开始轨迹记录</button>
+            <button class="btn" id="end-record">结束记录</button>
+            <button class="btn" id="pause-record">暂停记录</button>
+        </div>
+        <div class="input-item">
+            <label>查看：</label>
+            <button class="btn" onclick="loadPath()" id="test-path" style="margin-right:1rem;">测试</button>
+            <button class="btn" id="find-path" style="margin-right:1rem;">历史轨迹</button>
+            <button class="btn" id="remove-path">删除该轨迹</button>
+        </div>
+    </div>
 <!-- 加载地图JSAPI脚本 -->
-<script src="https://webapi.amap.com/maps?v=1.4.10&key=678b061e25d09194f9c342d2482d406a"></script>
-<script>
- var map = new AMap.Map('container', {
-     resizeEnable: true, //是否监控地图容器尺寸变化
-     zoom:16, //初始化地图层级
-     layers: [//使用多个图层
-         //     new AMap.TileLayer.Satellite()
-              new AMap.TileLayer.RoadNet()
-     ],
-     center: {{center}} //初始化地图中心点
- });
+    <script src="https://webapi.amap.com/maps?v=1.4.10&key=678b061e25d09194f9c342d2482d406a"></script>
+    <script>
+     var map = new AMap.Map('container', {
+         resizeEnable: true, //是否监控地图容器尺寸变化
+         zoom:16, //初始化地图层级
+         layers: [//使用多个图层
+                  //     new AMap.TileLayer.Satellite()
+                  new AMap.TileLayer.RoadNet()
+         ],
+         center: {{center}} //初始化地图中心点
+     });
 
 
- for(var point of {{points}} ){
-     var circleMarker = new AMap.CircleMarker({
-         center:point,
-         radius:5,//3D视图下，CircleMarker半径不要超过64px
-         fillColor:'rgba(255,0,0,1)',
-         fillOpacity:0.5,
-         zIndex:10,
-         bubble:true,
-         cursor:'pointer',
-     })
-     circleMarker.setMap(map)
- }
-</script>
+     function addPoint(point){
+         var circleMarker = new AMap.CircleMarker({
+             center:point,
+             radius:5,//3D视图下，CircleMarker半径不要超过64px
+             fillColor:'rgba(255,0,0,1)',
+             fillOpacity:0.5,
+             zIndex:10,
+             bubble:true,
+             cursor:'pointer',
+         })
+         circleMarker.setMap(map)
+     }
+     
+     function paseLoc(strs)
+     {//把文件内容当作一个字符串进行操作，解析出其中的经纬度值
+
+         var lines = strs.substring(4).split("\n");
+         var log,lat;
+         for(var line of lines)
+             {
+                 var log_lat=line.substring(1,line.length-1);
+                 log=log_lat.split(",")[0];
+                 lat=log_lat.split(",")[1];
+                 var point=[log,lat];
+                 addPoint(point);
+             }
+     }
+     function loadPath()
+     {//加载一条测试路径
+         var xmlhttp;
+         xmlhttp=new XMLHttpRequest();
+         xmlhttp.onreadystatechange=function()
+         {
+             if (xmlhttp.readyState==4 && xmlhttp.status==200)
+                 {
+                     var strs= xmlhttp.responseText;
+                     paseLoc(strs);
+                 }
+         }
+         xmlhttp.open("GET","/static/test.csv",true);
+         xmlhttp.send();
+     }
+    </script>
 </body>
 </html>
