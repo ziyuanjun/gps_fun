@@ -1,28 +1,26 @@
 import serial as Ser
 import time
+import sys
 from coordTransform_utils import *
-ISOTIMEFORMAT = '%Y-%m-%d_%X'
-date_time = time.strftime(ISOTIMEFORMAT, time.localtime(time.time()))
-filename1 = 'static/data_csv_' + date_time + '.csv'
-filename2 = 'gps_Data/data_raw_' + date_time + '.txt'
-file_data = open(filename1, 'w')
-file_data.write('loc\n')
-file_raw = open(filename2, 'w')
+import logging
+logging.basicConfig(level=logging.DEBUG)
 
 
-def startGPS(filename1=filename1, filename2=filename2):
+def startGPS(file_data, file_raw):
     ser = Ser.Serial('/dev/ttyUSB0', 4800, timeout=5)
     while 1:
         line = str(ser.readline())
+        logging.info(line)
         splitline = line.split(',')
 
-        if splitline[0] == 'b\'$GPGGA':
+        if splitline[0] == '$GPGGA':
             file_raw.write(line)
             latitiude = splitline[2]
             latDirec = splitline[3]
             longitude = splitline[4]
             longDirec = splitline[5]
-            print(latitiude + "," + longitude)
+            # print(latitiude + "," + longitude, file=sys.stdout)
+            logging.info(latitiude + "," + longitude)
 
             # parse longitude and latitiude, transform to GaoDe map
             try:
@@ -40,4 +38,12 @@ def startGPS(filename1=filename1, filename2=filename2):
                 continue
 
 if __name__ == "__main__":
-    startGPS()
+    ISOTIMEFORMAT = '%Y-%m-%d_%X'
+    date_time = time.strftime(ISOTIMEFORMAT, time.localtime(time.time()))
+    filename1 = 'static/data_csv_' + date_time + '.csv'
+    filename2 = 'gps_Data/data_raw_' + date_time + '.txt'
+    file_data = open(filename1, 'w')
+    file_data.write('loc\n')
+    file_raw = open(filename2, 'w')
+
+    startGPS(file_data, file_raw)

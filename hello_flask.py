@@ -1,8 +1,13 @@
 from flask import Flask
 from flask import render_template
-from gps import startGPS
+from gps_flask import startGPS
+import time
+import sys
+ISOTIMEFORMAT = '%Y-%m-%d_%X'
 import threading
 app = Flask(__name__)
+import logging
+logging.basicConfig(level=logging.DEBUG)
 
 
 @app.route('/')
@@ -24,12 +29,24 @@ def startPath():
     date_time = time.strftime(ISOTIMEFORMAT, time.localtime(time.time()))
     filename1 = 'static/data_csv_' + date_time + '.csv'
     filename2 = 'gps_Data/data_raw_' + date_time + '.txt'
-    file_data = file(filename1, 'w')
+    file_data = open(filename1, 'w')
     file_data.write('loc\n')
-    file_raw = file(filename2, 'w')
-    t = threading.Thread(target=startGPS, args=(filename1, filename2))
-    t.start()
+    file_raw = open(filename2, 'w')
+    # t = threading.Thread(target=startGPS, args=(filename1, filename2))
+    # t.start()
+    try:
+        startGPS(file_data, file_raw)
+    except Exception as e:
+        print(str(e))
+
     return filename1
+
+
+@app.route('/test_back')
+def test():
+    # print('haha', file=sys.stdout)
+    logging.info("haha")
+    return "OK"
 
 
 @app.route('/ajax')
