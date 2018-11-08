@@ -1,0 +1,111 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
+    <link rel="stylesheet" href="https://a.amap.com/jsapi_demos/static/demo-center/css/demo-center.css" />
+    <title>地图显示</title>
+    <style>
+     html,
+     body,
+     #container {
+         width: 100%;
+         height: 100%;
+     }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+</head>
+<body>
+    <div id="container"></div>
+    <div class="input-card" style="width:24rem;">
+        <h4>轨迹寻踪</h4>
+        <div class="input-item">
+            <label>操作：</label>
+            <button class="btn" id="start-record" onclick="startPathRecord()" style="margin-right:1rem;">开始轨迹记录</button>
+            <button class="btn" id="end-record">结束记录</button>
+            <button class="btn" id="pause-record">暂停记录</button>
+        </div>
+        <div class="input-item">
+            <label>查看：</label>
+            <button class="btn" onclick="loadPath()" id="test-path" style="margin-right:1rem;">测试</button>
+            <button class="btn" id="test-back" style="margin-right:1rem;">测试1</button>
+            <button class="btn" id="find-path" style="margin-right:1rem;">历史轨迹</button>
+            <button class="btn" id="remove-path">删除该轨迹</button>
+        </div>
+    </div>
+<!-- 加载地图JSAPI脚本 -->
+    <script src="https://webapi.amap.com/maps?v=1.4.10&key=678b061e25d09194f9c342d2482d406a"></script>
+    <script>
+     $( document ).ready(function(){
+         $("#test-back").on("click", function() {
+             $.get('test_back');
+         });
+     });
+    </script>
+    <script>
+
+
+     var map = new AMap.Map('container', {
+         resizeEnable: true, //是否监控地图容器尺寸变化
+         zoom:16, //初始化地图层级
+         layers: [//使用多个图层
+                  //     new AMap.TileLayer.Satellite()
+                  new AMap.TileLayer.RoadNet()
+         ],
+         center: {{center}} //初始化地图中心点
+     });
+
+     function startPathRecord(){
+         //调用后端开始GPS记录
+         //后端写一个路由，返回记录的文件名
+         //文件名传参给 loadPath(), 并定时调用该函数
+         window.open("{{ url_for("startPath") }}","_self");
+
+     }
+
+     function addPoint(point){
+         var circleMarker = new AMap.CircleMarker({
+             center:point,
+             radius:5,//3D视图下，CircleMarker半径不要超过64px
+             fillColor:'rgba(255,0,0,1)',
+             fillOpacity:0.5,
+             zIndex:10,
+             bubble:true,
+             cursor:'pointer',
+         })
+         circleMarker.setMap(map)
+     }
+     
+     function paseLoc(strs)
+     {//把文件内容当作一个字符串进行操作，解析出其中的经纬度值
+
+         var lines = strs.substring(4).split("\n");
+         var log,lat;
+         for(var line of lines)
+             {
+                 var log_lat=line.substring(1,line.length-1);
+                 log=log_lat.split(",")[0];
+                 lat=log_lat.split(",")[1];
+                 var point=[log,lat];
+                 addPoint(point);
+             }
+     }
+     function loadPath(path="/static/test.csv")
+     {//加载一条测试径
+         var xmlhttp;
+         xmlhttp=new XMLHttpRequest();
+         xmlhttp.onreadystatechange=function()
+         {
+             if (xmlhttp.readyState==4 && xmlhttp.status==200)
+                 {
+                     var strs= xmlhttp.responseText;
+                     paseLoc(strs);
+                 }
+         }
+         xmlhttp.open("GET",path,true);
+         xmlhttp.send();
+     }
+    </script>
+</body>
+</html>

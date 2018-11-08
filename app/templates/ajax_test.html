@@ -1,0 +1,49 @@
+<!doctype html>
+<html>
+    <head>
+        <script>
+         function paseLoc(strs)
+         {//把文件内容当作一个字符串进行操作，解析出其中的经纬度值
+
+             var lines = strs.substring(4).split("\n");
+             var str="";
+             var log,lat;
+             var logs="";
+             var lats="";
+             for(var line of lines)
+                 {
+                     str+=line+"||";
+                     var log_lat=line.substring(1,line.length-1);
+                     log=log_lat.split(",")[0];
+                     lat=log_lat.split(",")[1];
+                     logs+=log+"  ";
+                     lats+=lat+"  ";
+                 }
+             document.getElementById("myDiv").innerHTML=strs+logs+lats;
+
+         }
+         function loadXMLDoc()
+         {
+             var xmlhttp;
+             xmlhttp=new XMLHttpRequest();
+             xmlhttp.onreadystatechange=function()
+             {
+                 if (xmlhttp.readyState==4 && xmlhttp.status==200)
+                     {
+                         var strs= xmlhttp.responseText;
+                         paseLoc(strs);
+                     }
+             }
+             xmlhttp.open("GET","/static/test.csv",true);
+             xmlhttp.send();
+         }
+        </script>
+    </head>
+    <body>
+
+        <h2>AJAX</h2>
+        <button type="button" onclick="loadXMLDoc()">请求数据</button>
+        <div id="myDiv"></div>
+
+    </body>
+</html>
