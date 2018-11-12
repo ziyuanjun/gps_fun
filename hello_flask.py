@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, request, jsonify, flash
 from flask import render_template
 from gps_flask import startGPS
 import time
@@ -46,7 +46,7 @@ def startPath():
 def test():
     # print('haha', file=sys.stdout)
     logging.info("haha")
-    return "OK"
+    return jsonify(success=1)
 
 
 @app.route('/ajax')
@@ -54,8 +54,15 @@ def ajax():
     return render_template('ajax_test.html')
 
 
-@app.route('/map')
+@app.route('/map', methods=['GET', 'POST'])
 def map():
+    if request.method == 'POST':
+        if request.form["bsubmit"] == "S1":
+            logging.info("S1 Pressed")
+        elif request.form["bsubmit"] == "S2":
+            logging.info("S2 Pressed")
+        elif request.form["bsubmit"] == "S3":
+            logging.info("S3 Pressed")
     return render_template('map_test.html', center=center, points=points)
 
 

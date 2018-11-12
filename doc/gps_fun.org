@@ -10,7 +10,13 @@
      sudo apt-get install ntp
      #+END_SRC
 
-     杸mei'pai
+  3. 在树梅派上使用 
+     #+BEGIN_SRC sh
+     sudo python gps.py
+     #+END_SRC
+
+* 部署 Web 服务
+  使用 Flask 框架。
 
 
 

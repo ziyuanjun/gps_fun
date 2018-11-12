@@ -11,7 +11,27 @@
      body,
      #container {
          width: 100%;
-         height: 100%;
+         height: 90%;
+     }
+     .alert {
+         padding: 20px;
+         background-color: #f44336;
+         color: white;
+     }
+
+     .closebtn {
+         margin-left: 15px;
+         color: white;
+         font-weight: bold;
+         float: right;
+         font-size: 22px;
+         line-height: 20px;
+         cursor: pointer;
+         transition: 0.3s;
+     }
+
+     .closebtn:hover {
+         color: black;
      }
     </style>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
@@ -33,13 +53,34 @@
             <button class="btn" id="find-path" style="margin-right:1rem;">历史轨迹</button>
             <button class="btn" id="remove-path">删除该轨迹</button>
         </div>
+        <FORM action="/map" method="post">
+            <INPUT type="submit" name="bsubmit" value="S1">
+            <INPUT type="submit" name="bsubmit" value="S2">
+            <INPUT type="submit" name="bsubmit" value="S3">
+        </FORM>
+
     </div>
 <!-- 加载地图JSAPI脚本 -->
     <script src="https://webapi.amap.com/maps?v=1.4.10&key=678b061e25d09194f9c342d2482d406a"></script>
     <script>
-     $( document ).ready(function(){
-         $("#test-back").on("click", function() {
-             $.get('test_back');
+        $( document ).ready(function(){
+        $("#test-back").on("click", function() {
+        $.get('test_back',function(data,status){
+        alert(string(data.success)+string(status);
+        x=document.getElementById("end-record");  //查找元素
+        x.innerHTML="Java";
+        $('#end-record').value='你好';
+                 console.log(' 回到页面了'); 
+                 console.log(data.success); 
+                 if (data.success) {
+                     $('#update-div').message('Update Success')
+                    x.innerHTML="111";
+
+                 } else {
+                     $('#update-div').message('Update Failed')
+                    x.innerHTML="000";
+                 }
+             });
          });
      });
     </script>

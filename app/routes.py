@@ -1,5 +1,8 @@
 from app import app
-from flask import render_template
+import time
+from flask import render_template, request
+import global
+ISOTIMEFORMAT = '%Y-%m-%d_%X'
 
 
 log_lat = [116.323394571, 40.0550706141]
@@ -29,7 +32,7 @@ def startPath():
     return filename1
 
 
-@app.route('/test_back')
+@app.route('/test_back', methods=['GET'])
 def test():
     # print('haha', file=sys.stdout)
     logging.info("haha")
@@ -46,8 +49,10 @@ def ajax():
     return render_template('ajax_test.html')
 
 
-@app.route('/map')
+@app.route('/map', methods=['GET', 'POST'])
 def map():
+    if request.form == 0:
+        pass
     return render_template('map_test.html', center=center, points=points)
 
 
