@@ -17,6 +17,29 @@
 
 * 部署 Web 服务
   使用 Flask 框架。
+  1. python3 构建虚拟环境[fn:1]
+     #+BEGIN_SRC sh
+     mkdir myproject
+     cd myproject
+     python3 -m venv venv
+     #+END_SRC
+  2. 包管理[fn:2]
+     通过
+     #+BEGIN_SRC sh
+     pip freeze > requirements.txt
+     #+END_SRC
+     生成 requirements.txt。
+     使用
+     #+BEGIN_SRC sh
+     pip install -r requirements.txt
+     #+END_SRC
+     你就能安装所有的包。
+
+* Footnotes
+
+[fn:2] https://spacewander.github.io/explore-flask-zh/3-environment.html
+
+[fn:1] https://dormousehole.readthedocs.io/en/latest/installation.html#installation
 
 
 
